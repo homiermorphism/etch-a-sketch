@@ -3,27 +3,25 @@
   <head>
     <meta charset='utf-8'>
     <link rel='stylesheet' href='style.css'></link>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
 
   <body>
-      <div class='etch-a-sketch-border'>
+    <div class='options'>
+      <div class='buttons'>
+        <button class='button' id='resizeButton'>Resize</button>
+        <button class='button' id='clearButton'>Clear Grid</button>
+      </div>
 
-        <div class='etch-a-sketch-screen'>
-          <div class='grid-container'>
-          </div>
-        </div> <!-- end of screen -->
-
-        <div class='grid-options'>
-          <div class='resize'>
-            <span>Resize the grid by changing the number of columns/rows.</span>
-            <input type='number' id='userInput' value=16></input>
-            <button id='resizeButton'>Resize</button>
-            <button id='clearButton'>Clear Grid</button>
-          </div>
+      <div class='dropdowns'>
+        <div class='dropdown-menu shading-dropdown'>
+          <select class='dropdown-content'>
+            <option value='0'>Shading Options</option>
+            <option value='1'>Monochromatic</option>
+            <option value='2'>Darken</option>
+          </select>
         </div>
 
-        <div class='dropdown-menu'>
+        <div class='dropdown-menu color-dropdown'>
           <select class='dropdown-content'>
             <option value='0'>Color Options</option>
             <option value='1'>Gray</option>
@@ -36,9 +34,18 @@
             <option value='8'>Pink</option>
             <option value='9'>Black</option>
             <option value='10'>White</option>
+            <option value='11'>Rainbow</option>
           </select>
         </div>
+      </div> <!-- end of dropdowns -->
+    </div> <!-- end of options class -->
+
+      <div class='etch-a-sketch-border'>
+        <div class='etch-a-sketch-screen'>
+          <div class='grid-container'></div>
+        </div> <!-- end of screen -->
       </div> <!-- end of border -->
+
 
     <script src='index.js'></script>
   </body>
