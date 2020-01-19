@@ -3,9 +3,7 @@ const cells = document.getElementsByClassName('grid-item');
 const buttonsDiv = document.querySelector('.buttons');
 const resizeButton = document.getElementById('resizeButton');
 const clearButton = document.getElementById('clearButton');
-const rainbowButton = document.getElementById('rainbowButton');
-const darkenButton = document.getElementById('darkenButton');
-const grayButton = document.getElementById('grayButton');
+const dropdownMenu = document.getElementsByClassName('dropdown-menu');
 
 let userInput = document.getElementById('userInput').value;
 let currentColor = 'gray';
@@ -38,7 +36,6 @@ function clearGrid() {
   makeGrid(userInput);
 }
 
-
 function resizeGrid() {
   userInput = document.getElementById('userInput').value;
   clearGrid();
@@ -59,23 +56,75 @@ function darkenColor(e) {
   e.target.style.opacity = opacity + 0.2;
 }
 
-function rainbow() {
-  clearGrid();
-  currentColor = 'rainbow';
-}
-
-function darken() {
-  clearGrid();
-  currentColor = 'darken';
-}
-
-function gray() {
-  clearGrid();
-  currentColor = 'gray';
-}
-
 clearButton.addEventListener('click', clearGrid);
 resizeButton.addEventListener('click', resizeGrid);
-rainbowButton.addEventListener('click', rainbow);
-darkenButton.addEventListener('click', darken);
-grayButton.addEventListener('click', gray);
+
+
+for (i=0; i < dropdownMenu.length; i++) {
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! why do we need the [0] below????
+  let selectTag = dropdownMenu[i].getElementsByTagName('select')[0];
+  // div to hold the color selected
+  let selectedColor = document.createElement('div');
+  selectedColor.setAttribute('class','select-selected');
+  // change the HTML of the selected color div to the selected HTML option
+  selectedColor.innerHTML = selectTag.options[selectTag.selectedIndex].innerHTML;
+  dropdownMenu[i].appendChild(selectedColor);
+
+  // div to hold smaller divs with colors
+  let colorOptions = document.createElement('div');
+  colorOptions.setAttribute('class','select-items select-hide');
+  // we can use selectTag.length because we don't actually use j until
+  // we get to the options. So we're actually using the length of the options
+  // list inside of the selectTag
+  for (j=1; j < selectTag.length; j++) { // j=1 so that "Choose Color:" goes away
+    // divs for the colors
+    let colorItem = document.createElement('div');
+    colorItem.innerHTML = selectTag.options[j].innerHTML;
+    colorItem.addEventListener('click', function(e) {
+      //when an item is clicked, update the dropdown menu and the selected item
+      // parentNode is the colorOptions div created above
+      // previousSibling is the selected div
+      let selectedColorDiv = this.parentNode.previousSibling;
+      for (i=0; i < selectTag.length; i++) {
+        if (selectTag.options[i].innerHTML == this.innerHTML) {
+          let selectedItem = selectTag.selectedIndex;
+          selectedColorDiv.innerHTML = this.innerHTML;
+          let currentSelectedColor = this.parentNode.getElementsByClassName('same-as-selected');
+          for (k=0; k < currentSelectedColor.length; k++) {
+            currentSelectedColor[k].removeAttribute('class');
+          }
+          this.setAttribute('class','same-as-selected');
+          break;
+        }
+      }
+    }); //end of event listener
+    colorOptions.appendChild(colorItem);
+  } // end of second for loop (j)
+  dropdownMenu[i].appendChild(colorOptions);
+  selectedColor.addEventListener('click', function(e) {
+    e.stopPropagation();
+    this.nextSibling.classList.toggle('select-hide');
+    this.classList.toggle('select-arrow-active');
+  });
+} // end of first for loop (i)
+
+function closeSelect(element) {
+  let array = [];
+  let colorOptions = document.getElementsByClassName('select-items');
+  let selectedColor = document.getElementsByClassName('select-selected');
+  for (i=0; i < selectedColor.length; i++) {
+    if (element == selectedColor[i]) {
+      array.push(i)
+    }
+    else {
+      selectedColor[i].classList.remove('select-arrow-active');
+    }
+  }
+  for (i=0; i < colorOptions.length; i++) {
+    if (array.indexOf(i)) {
+      colorOptions[i].classList.add('select-hide');
+    }
+  }
+}
+
+document.addEventListener('click', closeSelect);

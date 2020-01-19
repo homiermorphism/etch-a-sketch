@@ -3,14 +3,16 @@
   <head>
     <meta charset='utf-8'>
     <link rel='stylesheet' href='style.css'></link>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
 
   <body>
       <div class='etch-a-sketch-border'>
+
         <div class='etch-a-sketch-screen'>
           <div class='grid-container'>
           </div>
-        </div>
+        </div> <!-- end of screen -->
 
         <div class='grid-options'>
           <div class='resize'>
@@ -21,14 +23,15 @@
           </div>
         </div>
 
-        <div class='color-options'>
-          <button id='rainbowButton'>Rainbow</button>
-          <button id='darkenButton'>Darken</button>
-          <button id='grayButton'>Gray</button>
+        <div class='dropdown-menu'>
+          <select class='dropdown-content'>
+            <option value='0'>Choose Color</option>
+            <option value='1'>Rainbow</option>
+            <option value='2'>Gray</option>
+            <option value='3'>Blue</option>
+          </select>
         </div>
       </div> <!-- end of border -->
-
-
 
     <script src='index.js'></script>
   </body>
