@@ -6,15 +6,11 @@ const clearButton = document.getElementById('clearButton');
 const shadingDropdown = document.getElementsByClassName('shading-dropdown');
 const colorDropdown = document.getElementsByClassName('color-dropdown');
 
-let userInput = 16;
+let userInput = 20;
 let currentColor = 'gray';
 let filling = 'Monochromatic';
 
-let optionsWidth = document.getElementsByClassName('options');
-optionsWidth = optionsWidth.offsetWidth;
-console.log(optionsWidth);
-
-makeGrid(16);
+makeGrid(20);
 
 function makeGrid(n) {
   gridContainer.style.setProperty('--grid-amount', n);
@@ -26,9 +22,11 @@ function makeGrid(n) {
         e.currentTarget.style.backgroundColor = currentColor;
       }
       else if (filling === 'Darken') {
-        let opacity = Number(e.target.style.opacity);
+        darkenGrid(e);
+      }
+      else if (filling === 'Rainbow') {
+        currentColor = getRandomColor();
         e.currentTarget.style.backgroundColor = currentColor;
-        e.currentTarget.style.opacity = opacity + 0.2;
       }
     });
   }
@@ -47,8 +45,39 @@ function resizeGrid() {
   makeGrid(userInput);
 }
 
-clearButton.addEventListener('click', clearGrid);
-resizeButton.addEventListener('click', resizeGrid);
+function darkenGrid(e) {
+  let opacity = Number(e.target.style.opacity);
+  e.currentTarget.style.backgroundColor = currentColor;
+  e.currentTarget.style.opacity = opacity + 0.2;
+}
+
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+function closeSelect(element) {
+  let array = [];
+  let dropdownOptions = document.getElementsByClassName('select-items');
+  let selectedItem = document.getElementsByClassName('select-selected');
+  for (i=0; i < selectedItem.length; i++) {
+    if (element == selectedItem[i]) {
+      array.push(i)
+    }
+    else {
+      selectedItem[i].classList.remove('select-arrow-active');
+    }
+  }
+  for (i=0; i < dropdownOptions.length; i++) {
+    if (array.indexOf(i)) {
+      dropdownOptions[i].classList.add('select-hide');
+    }
+  }
+}
 
 for (i=0; i < shadingDropdown.length; i++) {
   // need the [0] below because 'getElementSSSSByTagName' returns a nodelist
@@ -139,6 +168,9 @@ for (i=0; i < colorDropdown.length; i++) {
         }
       }
       currentColor = this.innerHTML;
+      if (filling === 'Rainbow') {
+        filling = 'Monochromatic';
+      }
     }); //end of event listener
     dropdownOptions.appendChild(optionDiv);
   } // end of second for loop (j)
@@ -151,23 +183,7 @@ for (i=0; i < colorDropdown.length; i++) {
   });
 } // end of first for loop (i)
 
-function closeSelect(element) {
-  let array = [];
-  let dropdownOptions = document.getElementsByClassName('select-items');
-  let selectedItem = document.getElementsByClassName('select-selected');
-  for (i=0; i < selectedItem.length; i++) {
-    if (element == selectedItem[i]) {
-      array.push(i)
-    }
-    else {
-      selectedItem[i].classList.remove('select-arrow-active');
-    }
-  }
-  for (i=0; i < dropdownOptions.length; i++) {
-    if (array.indexOf(i)) {
-      dropdownOptions[i].classList.add('select-hide');
-    }
-  }
-}
 
 document.addEventListener('click', closeSelect);
+clearButton.addEventListener('click', clearGrid);
+resizeButton.addEventListener('click', resizeGrid);
