@@ -24,6 +24,7 @@
 .dropdown-menu {
   position: relative;
   font-family: Arial;
+  width: 200px;
 }
 
 .dropdown-menu select {

@@ -16,15 +16,7 @@ function makeGrid(n) {
     const cell = document.createElement('div');
     gridContainer.appendChild(cell).className = 'grid-item';
     cell.addEventListener('mouseover', (e) => {
-      if (currentColor === 'rainbow') {
-        e.currentTarget.style.backgroundColor = getRandomColor();
-      }
-      else if (currentColor === 'darken') {
-        e.currentTarget.style.backgroundColor = darkenColor(e);
-      }
-      else if (currentColor === 'gray') {
-        e.currentTarget.style.backgroundColor = 'gray';
-      }
+      e.currentTarget.style.backgroundColor = currentColor;
     });
   }
 }
@@ -61,47 +53,48 @@ resizeButton.addEventListener('click', resizeGrid);
 
 
 for (i=0; i < dropdownMenu.length; i++) {
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! why do we need the [0] below????
+  // need the [0] below because 'getElementSSSSByTagName' returns a nodelist
+  // and we are grabbing the first item in the list
   let selectTag = dropdownMenu[i].getElementsByTagName('select')[0];
   // div to hold the color selected
-  let selectedColor = document.createElement('div');
-  selectedColor.setAttribute('class','select-selected');
+  let selectedItem = document.createElement('div');
+  selectedItem.setAttribute('class','select-selected');
   // change the HTML of the selected color div to the selected HTML option
-  selectedColor.innerHTML = selectTag.options[selectTag.selectedIndex].innerHTML;
-  dropdownMenu[i].appendChild(selectedColor);
+  selectedItem.innerHTML = selectTag.options[selectTag.selectedIndex].innerHTML;
+  dropdownMenu[i].appendChild(selectedItem);
 
   // div to hold smaller divs with colors
-  let colorOptions = document.createElement('div');
-  colorOptions.setAttribute('class','select-items select-hide');
+  let dropdownOptions = document.createElement('div');
+  dropdownOptions.setAttribute('class','select-items select-hide');
   // we can use selectTag.length because we don't actually use j until
   // we get to the options. So we're actually using the length of the options
   // list inside of the selectTag
   for (j=1; j < selectTag.length; j++) { // j=1 so that "Choose Color:" goes away
     // divs for the colors
-    let colorItem = document.createElement('div');
-    colorItem.innerHTML = selectTag.options[j].innerHTML;
-    colorItem.addEventListener('click', function(e) {
+    let optionDiv = document.createElement('div');
+    optionDiv.innerHTML = selectTag.options[j].innerHTML;
+    optionDiv.addEventListener('click', function(e) {
       //when an item is clicked, update the dropdown menu and the selected item
-      // parentNode is the colorOptions div created above
+      // parentNode is the dropdownOptions div created above
       // previousSibling is the selected div
-      let selectedColorDiv = this.parentNode.previousSibling;
+      let selectedItemDiv = this.parentNode.previousSibling;
       for (i=0; i < selectTag.length; i++) {
         if (selectTag.options[i].innerHTML == this.innerHTML) {
-          let selectedItem = selectTag.selectedIndex;
-          selectedColorDiv.innerHTML = this.innerHTML;
-          let currentSelectedColor = this.parentNode.getElementsByClassName('same-as-selected');
-          for (k=0; k < currentSelectedColor.length; k++) {
-            currentSelectedColor[k].removeAttribute('class');
+          selectedItemDiv.innerHTML = this.innerHTML;
+          let currentSelectedItem = this.parentNode.getElementsByClassName('same-as-selected');
+          for (k=0; k < currentSelectedItem.length; k++) {
+            currentSelectedItem[k].removeAttribute('class');
           }
           this.setAttribute('class','same-as-selected');
           break;
         }
       }
+      currentColor = selectedItem.innerHTML;
     }); //end of event listener
-    colorOptions.appendChild(colorItem);
+    dropdownOptions.appendChild(optionDiv);
   } // end of second for loop (j)
-  dropdownMenu[i].appendChild(colorOptions);
-  selectedColor.addEventListener('click', function(e) {
+  dropdownMenu[i].appendChild(dropdownOptions);
+  selectedItem.addEventListener('click', function(e) {
     e.stopPropagation();
     this.nextSibling.classList.toggle('select-hide');
     this.classList.toggle('select-arrow-active');
@@ -110,19 +103,19 @@ for (i=0; i < dropdownMenu.length; i++) {
 
 function closeSelect(element) {
   let array = [];
-  let colorOptions = document.getElementsByClassName('select-items');
-  let selectedColor = document.getElementsByClassName('select-selected');
-  for (i=0; i < selectedColor.length; i++) {
-    if (element == selectedColor[i]) {
+  let dropdownOptions = document.getElementsByClassName('select-items');
+  let selectedItem = document.getElementsByClassName('select-selected');
+  for (i=0; i < selectedItem.length; i++) {
+    if (element == selectedItem[i]) {
       array.push(i)
     }
     else {
-      selectedColor[i].classList.remove('select-arrow-active');
+      selectedItem[i].classList.remove('select-arrow-active');
     }
   }
-  for (i=0; i < colorOptions.length; i++) {
+  for (i=0; i < dropdownOptions.length; i++) {
     if (array.indexOf(i)) {
-      colorOptions[i].classList.add('select-hide');
+      dropdownOptions[i].classList.add('select-hide');
     }
   }
 }
